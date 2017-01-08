@@ -84,9 +84,12 @@ class DateTime(HalLibrary):
             ref_time = datetime.now(timezone(self.timezone))
             ref_text = " in " + self.timezone
 
-        c_date = ref_time.strftime("%A, %-d %B, %Y")
+        suffix = 'th' if 11<=ref_time.day<=13 else {1:'st',2:'nd',3:'rd'}.get(ref_time.day%10, 'th')
+
+        c_date = ref_time.strftime("%A, %-d{} %B, %Y".format(suffix))
         c_time = ref_time.strftime("%I:%M %p")
         c_day = ref_time.strftime("%A")
+
 
         output = ""
         if(self.show == 1):
