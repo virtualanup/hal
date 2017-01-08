@@ -39,10 +39,14 @@ class HalLibrary(metaclass=abc.ABCMeta):
         pass
 
     def match_and_reduce(self, regex):
-        """Match command with regex and reduce"""
+        """Match command with regex and reduce the command"""
         r_m = regex.match(self.command)
         if r_m:
+            self.last_matched = r_m
             self.command = self.command[len(r_m.group(0)):]
+            return True
+        return False
+
     # Generic matches
     wh_question = re.compile(
         "((What\s+is)|(whats)|(I\s+want\s+to\s+know)|(Show(\s+me)?))(\s+the)?\s+", re.IGNORECASE)

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import re
-import time
+from datetime import datetime
+from pytz import country_timezones, timezone
 
 from hal.library import HalLibrary
 
@@ -13,9 +14,12 @@ class DateTime(HalLibrary):
     time = re.compile("(time)", re.IGNORECASE)
     datetime = re.compile(
         "(((date\s+and\s+time)|(time\s+and\s+date)))", re.IGNORECASE)
+    dayofweek = re.compile("(day(\s+of\s+week)?\s+)")
+
+    pointofref = re.compile("\s*((today)|(now))", re.IGNORECASE)
 
     def init(self):
-        pass
+        self.timezone = None
 
     def match(self):
         self.show = 0
@@ -32,15 +36,40 @@ class DateTime(HalLibrary):
         self.match_and_reduce(re.compile("current\s+"))
 
         # Try to match with one of the regex
-        if(self.datetime.match(self.command)):
+        if(self.match_and_reduce(self.datetime)):
             self.show = 1
-            self.match_and_reduce(self.datetime)
-        elif(self.date.match(self.command)):
-            self.match_and_reduce(self.date)
+        elif(self.match_and_reduce(self.date)):
             self.show = 2
-        elif(self.time.match(self.command)):
-            self.match_and_reduce(self.time)
+        elif(self.match_and_reduce(self.time)):
             self.show = 3
+        elif(self.match_and_reduce(self.dayofweek)):
+            self.show = 4
+        else:
+            # this match is mandatory
+            return
+
+        pointofref = self.match_and_reduce(self.pointofref)
+
+        # Get city name if possible
+        if(self.match_and_reduce(re.compile("\s+(in\s+)?(\w+(\/\w+)?)"))):
+            city_info = self.last_matched.group(2).strip().lower()
+            for tz in country_timezones.items():
+                symbol = tz[0].lower()
+                for location in tz[1]:
+                    llocation = location.lower()
+                    if city_info == symbol or city_info == llocation or \
+                            city_info in llocation.split("/"):
+                        self.timezone = location
+                        break
+                if self.timezone:
+                    break
+            else:
+                # TODO: Show city not found error here?
+                print("Timezone not found")
+
+        if not pointofref:
+            # If not specified earlier, try again
+            pointofref = self.match_and_reduce(self.pointofref)
 
         self.match_and_reduce(self.punctuations)
 
@@ -48,15 +77,29 @@ class DateTime(HalLibrary):
             self.matched = True
 
     def get_response(self):
-        c_date = time.strftime("%A, %-d %B, %Y")
-        c_time = time.strftime("%I:%M %p")
+        ref_time = datetime.now()
+        ref_text = ""
 
+        if self.timezone:
+            ref_time = datetime.now(timezone(self.timezone))
+            ref_text = " in " + self.timezone
+
+        c_date = ref_time.strftime("%A, %-d %B, %Y")
+        c_time = ref_time.strftime("%I:%M %p")
+        c_day = ref_time.strftime("%A")
+
+        output = ""
         if(self.show == 1):
-            return "The date is {} and time is {}".format(c_date, c_time)
+            output =  "The date is {} and time is {}".format(c_date, c_time)
         elif(self.show == 2):
-            return "The date is {}".format(c_date)
+            output =  "The date is {}".format(c_date)
         elif (self.show == 3):
-            return "The time is {}".format(c_time)
+            output =  "The time is {}".format(c_time)
+        elif (self.show == 4):
+            output =  "The day of week is {}".format(c_day)
+
+        output = output + ref_text
+        return output
 
     def help_text(self, text):
         pass
