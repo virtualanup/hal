@@ -19,7 +19,7 @@ class DateTime(HalLibrary):
     pointofref = re.compile("\s*((today)|(now))", re.IGNORECASE)
 
     def init(self):
-        self.timezone = None
+        self.timezones = []
 
     def match(self):
         self.show = 0
@@ -59,13 +59,11 @@ class DateTime(HalLibrary):
                     llocation = location.lower()
                     if city_info == symbol or city_info == llocation or \
                             city_info in llocation.split("/"):
-                        self.timezone = location
-                        break
-                if self.timezone:
-                    break
-            else:
+                        self.timezones.append(location)
+            if not self.timezones:
                 # TODO: Show city not found error here?
                 print("Timezone not found")
+                return
 
         if not pointofref:
             # If not specified earlier, try again
@@ -76,13 +74,14 @@ class DateTime(HalLibrary):
         if len(self.command) == 0:
             self.matched = True
 
-    def get_response(self):
+    def get_indiv_resp(self, cur_timezone=None):
         ref_time = datetime.now()
         ref_text = ""
 
-        if self.timezone:
-            ref_time = datetime.now(timezone(self.timezone))
-            ref_text = " in " + self.timezone
+        if cur_timezone:
+            ref_time = datetime.now(timezone(cur_timezone))
+            loc = cur_timezone.replace("_"," ").split("/")
+            ref_text = " in {} in {}".format(loc[1], loc[0])
 
         suffix = 'th' if 11<=ref_time.day<=13 else {1:'st',2:'nd',3:'rd'}.get(ref_time.day%10, 'th')
 
@@ -103,6 +102,16 @@ class DateTime(HalLibrary):
 
         output = output + ref_text
         return output
+
+    def get_response(self):
+        response = []
+        if self.timezones:
+            for timezone in self.timezones[:10]:
+                response.append(self.get_indiv_resp(timezone))
+        else:
+            response.append(self.get_indiv_resp())
+        return response
+
 
     def help_text(self, text):
         pass

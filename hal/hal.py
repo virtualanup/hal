@@ -71,7 +71,9 @@ class Hal(metaclass=abc.ABCMeta):
             lib_obj = lib(command)
             if lib_obj.matched:
                 matched = True
-                self.say(lib_obj.get_response())
+                resp = lib_obj.get_response()
+                for r in resp:
+                    self.say(r)
 
         if not matched:
             self.say("I don't understand what you're saying.")
