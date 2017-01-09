@@ -2,8 +2,6 @@
 
 import re
 import random
-from datetime import datetime
-from pytz import country_timezones, timezone
 
 from hal.library import HalLibrary
 
