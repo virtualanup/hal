@@ -17,6 +17,11 @@ class HalLibrary(metaclass=abc.ABCMeta):
     def init(self):
         pass
 
+    def command_empty(self, ignore_punctuations=False):
+        if(ignore_punctuations):
+            self.match_and_reduce(self.punctuations)
+        return len(self.command) == 0
+
     @abc.abstractmethod
     def match(self):
         """
@@ -60,7 +65,6 @@ class HalLibrary(metaclass=abc.ABCMeta):
                 if exclusive:
                     break
         return matched
-
 
     # Generic matches
     wh_question = re.compile(
