@@ -6,3 +6,4 @@
 *.pyc
 .coverage
 .coverage.*
+devdata

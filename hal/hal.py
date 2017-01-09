@@ -50,6 +50,9 @@ class Hal(metaclass=abc.ABCMeta):
         self.say("{}. Whet can I help you with?".format(greeting))
 
     def process(self, command):
+        """
+        Process the command and get response by querying each plugin if required.
+        """
         if(len(command) == 0):
             self.greet()
             return
@@ -67,11 +70,16 @@ class Hal(metaclass=abc.ABCMeta):
             return
 
         matched = False
+
         for lib in self.libraries:
+
             lib_obj = lib(command)
+
             if lib_obj.matched:
+
                 matched = True
                 resp = lib_obj.get_response()
+
                 for r in resp:
                     self.say(r)
 

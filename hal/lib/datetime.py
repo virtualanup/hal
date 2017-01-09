@@ -10,13 +10,21 @@ from hal.library import HalLibrary
 class DateTime(HalLibrary):
 
     name = "Date and Time"
-    date = re.compile("(date)", re.IGNORECASE)
-    time = re.compile("(time)", re.IGNORECASE)
-    datetime = re.compile(
-        "(((date\s+and\s+time)|(time\s+and\s+date)))", re.IGNORECASE)
-    dayofweek = re.compile("(day(\s+of\s+week)?\s+)")
 
-    pointofref = re.compile("\s*((today)|(now))", re.IGNORECASE)
+    date_regex = re.compile("(date)", re.IGNORECASE)
+    time_regex = re.compile("(time)", re.IGNORECASE)
+    datetime_regex = re.compile(
+        "(((date\s+and\s+time)|(time\s+and\s+date)))", re.IGNORECASE)
+    dayofweek_regex = re.compile("(day(\s+of\s+week)?\s+)")
+
+    pointofref_regex = re.compile("\s*((today)|(now))", re.IGNORECASE)
+
+    timezone_regex = re.compile("\s+(in\s+)?(\w+(\/\w+)?)", re.IGNORECASE)
+
+    SHOWDATE = 1
+    SHOWTIME = 2
+    SHOWDATETIME = 3
+    SHOWDAY = 4
 
     def init(self):
         self.timezones = []
@@ -25,41 +33,41 @@ class DateTime(HalLibrary):
         self.show = 0
 
         # Trim if it starts with WH question or tell
-        to_match = [self.wh_question, self.tell]
-
-        for regex in to_match:
-            if regex.match(self.command):
-                self.match_and_reduce(regex)
-                break
+        self.match_and_reduce_list([self.wh_question, self.tell], True)
 
         # remove the "current" if it exists
         self.match_and_reduce(re.compile("current\s+"))
 
         # Try to match with one of the regex
-        if(self.match_and_reduce(self.datetime)):
-            self.show = 1
-        elif(self.match_and_reduce(self.date)):
-            self.show = 2
-        elif(self.match_and_reduce(self.time)):
-            self.show = 3
-        elif(self.match_and_reduce(self.dayofweek)):
-            self.show = 4
+        if(self.match_and_reduce(self.datetime_regex)):
+            self.show = self.SHOWDATETIME
+        elif(self.match_and_reduce(self.date_regex)):
+            self.show = self.SHOWDATE
+        elif(self.match_and_reduce(self.time_regex)):
+            self.show = self.SHOWTIME
+        elif(self.match_and_reduce(self.dayofweek_regex)):
+            self.show = self.SHOWDAY
         else:
             # this match is mandatory
             return
 
-        pointofref = self.match_and_reduce(self.pointofref)
+        pointofref = self.match_and_reduce(self.pointofref_regex)
 
         # Get city name if possible
-        if(self.match_and_reduce(re.compile("\s+(in\s+)?(\w+(\/\w+)?)"))):
+        if(self.match_and_reduce(self.timezone_regex)):
+
+            # Get the city (or continent) name
             city_info = self.last_matched.group(2).strip().lower()
+
             for tz in country_timezones.items():
                 symbol = tz[0].lower()
+
                 for location in tz[1]:
                     llocation = location.lower()
                     if city_info == symbol or city_info == llocation or \
                             city_info in llocation.split("/"):
                         self.timezones.append(location)
+
             if not self.timezones:
                 # TODO: Show city not found error here?
                 print("Timezone not found")
@@ -67,51 +75,56 @@ class DateTime(HalLibrary):
 
         if not pointofref:
             # If not specified earlier, try again
-            pointofref = self.match_and_reduce(self.pointofref)
+            pointofref = self.match_and_reduce(self.pointofref_regex)
 
         self.match_and_reduce(self.punctuations)
 
         if len(self.command) == 0:
             self.matched = True
 
-    def get_indiv_resp(self, cur_timezone=None):
+    def get_response_timezone(self, cur_timezone=None):
+        """
+        Get response for certain timezone or system timezone if
+        cur_timezone is not passed
+        """
+
         ref_time = datetime.now()
         ref_text = ""
 
         if cur_timezone:
+            # generate text like "New York in America"
             ref_time = datetime.now(timezone(cur_timezone))
-            loc = cur_timezone.replace("_"," ").split("/")
+            loc = cur_timezone.replace("_", " ").split("/")
             ref_text = " in {} in {}".format(loc[1], loc[0])
 
-        suffix = 'th' if 11<=ref_time.day<=13 else {1:'st',2:'nd',3:'rd'}.get(ref_time.day%10, 'th')
+        # Suffix for date
+        suffix = 'th' if 11 <= ref_time.day <= 13 else {
+            1: 'st', 2: 'nd', 3: 'rd'}.get(ref_time.day % 10, 'th')
 
         c_date = ref_time.strftime("%A, %-d{} %B, %Y".format(suffix))
         c_time = ref_time.strftime("%I:%M %p")
         c_day = ref_time.strftime("%A")
 
-
         output = ""
-        if(self.show == 1):
-            output =  "The date is {} and time is {}".format(c_date, c_time)
-        elif(self.show == 2):
-            output =  "The date is {}".format(c_date)
-        elif (self.show == 3):
-            output =  "The time is {}".format(c_time)
-        elif (self.show == 4):
-            output =  "The day of week is {}".format(c_day)
+        if(self.show == self.SHOWDATETIME):
+            output = "The date is {} and time is {}".format(c_date, c_time)
+        elif(self.show == self.SHOWDATE):
+            output = "The date is {}".format(c_date)
+        elif (self.show == self.SHOWTIME):
+            output = "The time is {}".format(c_time)
+        elif (self.show == self.SHOWDAY):
+            output = "The day of week is {}".format(c_day)
 
-        output = output + ref_text
-        return output
+        return output + ref_text
 
     def get_response(self):
         response = []
         if self.timezones:
             for timezone in self.timezones[:10]:
-                response.append(self.get_indiv_resp(timezone))
+                response.append(self.get_response_timezone(timezone))
         else:
-            response.append(self.get_indiv_resp())
+            response.append(self.get_response_timezone())
         return response
-
 
     def help_text(self, text):
         pass

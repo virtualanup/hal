@@ -47,9 +47,24 @@ class HalLibrary(metaclass=abc.ABCMeta):
             return True
         return False
 
+    def match_and_reduce_list(self, regex_list, exclusive=False):
+        """
+        Match the regex of the list against the command and reduce the
+        command and ignore if match found. Return after first match if
+        exclusive
+        """
+        matched = False
+        for regex in regex_list:
+            if self.match_and_reduce(regex):
+                matched = True
+                if exclusive:
+                    break
+        return matched
+
+
     # Generic matches
     wh_question = re.compile(
-        "((What\s+is)|(whats)|(I\s+want\s+to\s+know)|(Show(\s+me)?))(\s+the)?\s+", re.IGNORECASE)
+        "((What\s+(is|was))|(whats)|(I\s+want\s+to\s+know)|(Show(\s+me)?))(\s+the)?\s+", re.IGNORECASE)
 
     tell = re.compile("(say|tell)(\s+me)?\s+", re.IGNORECASE)
 
