@@ -35,6 +35,7 @@ class JokeLib(HalLibrary):
     def help_text(self, text):
         pass
 
+    # Jokes from onelinefun.com
     jokes_collection = [
             "I hate lying people, they're always in my way to the ocean.",
             "My wife and I were happy for twenty years. Then we met.",
