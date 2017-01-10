@@ -15,7 +15,7 @@ class DateTime(HalLibrary):
     time_regex = re.compile("(time)", re.IGNORECASE)
     datetime_regex = re.compile(
         "(((date\s+and\s+time)|(time\s+and\s+date)))", re.IGNORECASE)
-    dayofweek_regex = re.compile("(day(\s+of\s+week)?\s+)")
+    dayofweek_regex = re.compile("day(\s+of\s+week)?(\s+)?")
 
     pointofref_regex = re.compile("\s*((today)|(now))", re.IGNORECASE)
 
