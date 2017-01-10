@@ -96,7 +96,7 @@ class DateTime(HalLibrary):
             # generate text like "New York in America"
             ref_time = datetime.now(timezone(cur_timezone))
             loc = cur_timezone.replace("_", " ").split("/")
-            ref_text = " in {} in {}".format(loc[1], loc[0])
+            ref_text = " in {}, {}".format(loc[1], loc[0])
 
         # Suffix for date
         suffix = 'th' if 11 <= ref_time.day <= 13 else {
