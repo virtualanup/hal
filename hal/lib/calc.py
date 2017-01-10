@@ -13,8 +13,10 @@ class CalcLib(HalLibrary):
     """
 
     name = "Calculator"
+    keywords = ["calc", "calculate", "eval"]
 
-    calcregex = re.compile("(calc|eval|calculate)\s+((the\s+)?value\s+of\s+)?(.*)")
+    calcregex = re.compile(
+        "(what(s|\s+is)?|calc|eval|calculate)\s+((the\s+)?value\s+of\s+)?(.*)", re.IGNORECASE)
 
     def init(self):
         pass
@@ -35,5 +37,14 @@ class CalcLib(HalLibrary):
     def get_response(self):
         return ["Result : " + str(self.result)]
 
-    def help_text(self, text):
-        pass
+    @classmethod
+    def help(cls):
+        return {
+            "name": "Calculator",
+            "description": "Evaluate mathematical expressions",
+            "samples": [
+                    "hal what is 12+12",
+                    "hal calculate the value of sin(90)",
+                    "hal calc \"12*(12+12*7)\"",
+            ]
+        }

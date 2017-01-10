@@ -9,6 +9,7 @@ from hal.library import HalLibrary
 class JokeLib(HalLibrary):
 
     name = "jokes"
+    keywords = ["joke", "jokes", "fun"]
 
     jokeregex = re.compile("((jokes)|(a\s+)?joke)", re.IGNORECASE)
     def init(self):
@@ -30,8 +31,16 @@ class JokeLib(HalLibrary):
         return [random.choice(self.jokes_collection)]
 
 
-    def help_text(self, text):
-        pass
+    @classmethod
+    def help(cls):
+        return {
+                "name": "Jokes",
+                "description": "Tell jokes",
+                "samples": [
+                    "hal tell me a joke",
+                    "hal say a joke",
+                    ]
+                }
 
     # Jokes from onelinefun.com
     jokes_collection = [

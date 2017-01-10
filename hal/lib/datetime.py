@@ -10,6 +10,7 @@ from hal.library import HalLibrary
 class DateTime(HalLibrary):
 
     name = "Date and Time"
+    keywords = ["date", "time", "today"]
 
     date_regex = re.compile("(date)", re.IGNORECASE)
     time_regex = re.compile("(time)", re.IGNORECASE)
@@ -126,5 +127,14 @@ class DateTime(HalLibrary):
             response.append(self.get_response_timezone())
         return response
 
-    def help_text(self, text):
-        pass
+    @classmethod
+    def help(cls):
+        return {
+                "name": "Date and Time",
+                "description": "Show date and time information",
+                "samples": [
+                    "hal show time in london",
+                    "hal show date and time",
+                    "hal whats today"
+                    ]
+                }

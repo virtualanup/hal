@@ -36,10 +36,10 @@ class HalLibrary(metaclass=abc.ABCMeta):
         """
         pass
 
-    @abc.abstractmethod
-    def help_text(self):
+    @abc.abstractclassmethod
+    def help(cls):
         """
-        returns help text
+        returns help
         """
         pass
 

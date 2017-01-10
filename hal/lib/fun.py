@@ -11,6 +11,7 @@ class FunLib(HalLibrary):
     Most of these are directly influenced by betty
     """
     name = "fun"
+    keywords = ["life", "fun"]
 
     mol_regex = re.compile("meaning\s+of\s+life", re.IGNORECASE)
     open_pod_regex = re.compile(
@@ -49,5 +50,14 @@ class FunLib(HalLibrary):
     def get_response(self):
         return [self.fun_response]
 
-    def help_text(self, text):
-        pass
+    @classmethod
+    def help(cls):
+        return {
+            "name": "Fun Interactions",
+            "description": "Some fun interactions with hal",
+            "samples": [
+                    "hal whats the meaning of life",
+                    "hal open the pod bay door",
+                    "hal you're funny",
+            ]
+        }

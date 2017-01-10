@@ -2,6 +2,7 @@
 import datetime
 import abc
 import os
+import re
 import inspect
 import importlib
 from .library import HalLibrary
@@ -59,14 +60,20 @@ class Hal(metaclass=abc.ABCMeta):
 
         # prepare the command
         command = command.strip()
-        command_words = command.split()
-        command_lower = command.lower()
-        command_upper = command.upper()
 
         # Some hard coded patterns: If first word is help, activate help
         # moudule
-        if command_lower.startswith("help"):
-            self.say("Help mode activated")
+        help_regex = re.compile("help\s+([^\s]+)")
+        help_match = help_regex.match(command)
+        if help_match:
+            keyword = help_match.group(1).lower()
+            # Try to find libraries with the keyword and print their help
+
+            for lib in self.libraries:
+                if keyword in lib.keywords:
+                    # Print the help text
+                    help_content = lib.help()
+                    self.display_help(help_content)
             return
 
         matched = False
