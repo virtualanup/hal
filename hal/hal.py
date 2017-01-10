@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
-import datetime
+
 import abc
+import datetime
+import importlib
+import inspect
 import os
 import re
-import inspect
-import importlib
+import six
+
 from .library import HalLibrary
 
 
-class Hal(metaclass=abc.ABCMeta):
+@six.add_metaclass(abc.ABCMeta)
+class Hal():
 
     def __init__(self, configpath):
         # Find libraries inside the lib directory

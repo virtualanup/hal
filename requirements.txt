@@ -1,2 +1,3 @@
 pytz==2016.10
 simpleeval==0.9.1
+six==1.10.0

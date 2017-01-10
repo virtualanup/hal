@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import abc
-
 import re
+import six
 
 
-class HalLibrary(metaclass=abc.ABCMeta):
+@six.add_metaclass(abc.ABCMeta)
+class HalLibrary():
 
     def __init__(self, command):
         self.orig_command = command
