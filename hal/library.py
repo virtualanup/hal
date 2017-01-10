@@ -37,7 +37,6 @@ class HalLibrary():
         """
         pass
 
-    @abc.abstractclassmethod
     def help(cls):
         """
         returns help
