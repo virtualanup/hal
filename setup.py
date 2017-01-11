@@ -3,7 +3,7 @@ from distutils.core import setup
 from hal.version import __version__ as version
 
 setup(
-    name='hal',
+    name='hal-assistant',
     packages=['hal'],
     version=version,
     description='Command Line Assistant',
