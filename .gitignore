@@ -8,3 +8,5 @@
 .coverage.*
 devdata
 build
+MANIFEST
+dist
