@@ -1,13 +1,16 @@
 from distutils.core import setup
+
+from hal.version import __version__ as version
+
 setup(
     name='hal',
     packages=['hal'],
-    version='0.1',
+    version=version,
     description='Command Line Assistant',
     author='Anup Pokhrel',
     author_email='virtualanup@gmail.com',
     url='https://github.com/virtualanup/hal',
-    download_url='https://github.com/virtualanup/hal/archive/0.1.tar.gz',
+    download_url='https://github.com/virtualanup/hal/archive/{}.tar.gz'.format(version),
     keywords=['assistant', 'hal'],
     classifiers=[],
     install_requires=[
