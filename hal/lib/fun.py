@@ -22,6 +22,8 @@ class FunLib(HalLibrary):
     dice_regex = re.compile(
         "roll\s+(.*)\s+dice(s)?(\s+of\s+(.*)\s+face(s)?)?")
 
+    coin_regex = re.compile("toss\s+(.*)\s+coin(s)?")
+
     def init(self):
         self.fun_response = ""
 
@@ -57,7 +59,7 @@ class FunLib(HalLibrary):
             num_of_dice = self.last_matched.group(1)
 
             try:
-                self.num_of_dice = service.parse(num_of_dice )
+                self.num_of_dice = service.parse(num_of_dice)
                # If faces is also passed
                 self.faces = 1
                 try:
@@ -73,11 +75,33 @@ class FunLib(HalLibrary):
                         self.response = ["Can't roll dice of that faces"]
                     else:
                         self.response = []
-                        for j in range(1, self.num_of_dice+1):
+                        for j in range(1, self.num_of_dice + 1):
                             self.response.append(
-                                    "Dice {} : {}".format(j, random.randint(1, self.faces))
-                                )
+                                "Dice {} : {}".format(
+                                    j, random.randint(1, self.faces))
+                            )
                     self.matched = True
+            except:
+                pass
+        self.command = self.orig_command
+        if self.match_and_reduce(self.coin_regex):
+
+            service = NumberService()
+            num_of_coins = self.last_matched.group(1)
+
+            try:
+                self.num_of_coins = service.parse(num_of_coins)
+                if self.command_empty(True):
+                    if self.num_of_coins < 0 or self.num_of_coins > 10:
+                        self.response["Can't roll that number of coins"]
+                    else:
+                        self.response = []
+                        for j in range(1, self.num_of_coins + 1):
+                            self.response.append(
+                                "Coin {} : {}".format(
+                                    j, random.choice(["Head", "Tail"])
+                            ))
+                    self.matched=True
             except:
                 pass
 
