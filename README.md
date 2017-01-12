@@ -24,6 +24,13 @@ Hal can do unit conversions for you
     > hal convert 5 celsius to fahrenheit
     Result : 9.0 degF
 
+Hal can roll dices for you.
+
+    > hal roll three dices of ten faces
+    Dice 1 : 5
+    Dice 2 : 7
+    Dice 3 : 1
+
 But Unfortunately, there are some things Hal can't do
 
     > hal please open the pod bay door
