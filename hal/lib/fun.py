@@ -15,7 +15,7 @@ class FunLib(HalLibrary):
 
     mol_regex = re.compile("meaning\s+of\s+life", re.IGNORECASE)
     open_pod_regex = re.compile(
-        "open\s+(the\s+)?pod\s+bay\s+door(s)?", re.IGNORECASE)
+        "(please\s+)?open\s+(the\s+)?pod\s+bay\s+door(s)?", re.IGNORECASE)
     appreciate_regex = re.compile(
         "you\'?(re)?\s+(are\s+)?(cool|awesome|amazing|fun(ny)?|rock\s+my\s+world|rule)")
 

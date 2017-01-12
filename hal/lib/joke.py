@@ -49,7 +49,6 @@ class JokeLib(HalLibrary):
             "Today a man knocked on my door and asked for a small donation towards the local swimming pool. I gave him a glass of water.",
             "If i had a dollar for every girl that found me unattractive, they would eventually find me attractive.",
             "A recent study has found that women who carry a little extra weight live longer than the men who mention it.",
-            "A recent study has found that women who carry a little extra weight live longer than the men who mention it.",
             "I'm great at multitasking. I can waste time, be unproductive, and procrastinate all at once.",
             "Just read that 4,153,237 people got married last year, not to cause any trouble but shouldn't that be an even number?",
             "I find it ironic that the colors red, white, and blue stand for freedom until they are flashing behind you.",

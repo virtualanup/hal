@@ -32,7 +32,7 @@ class CalcLib(HalLibrary):
                     self.result = result
                 except:
                     # Fail silently
-                    raise
+                    pass
 
     def get_response(self):
         return ["Result : " + str(self.result)]
