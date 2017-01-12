@@ -20,9 +20,9 @@ class FunLib(HalLibrary):
         "you\'?(re)?\s+(are\s+)?(cool|awesome|amazing|fun(ny)?|rock\s+my\s+world|rule)")
 
     dice_regex = re.compile(
-        "roll\s+(.*)\s+dice(s)?(\s+of\s+(.*)\s+face(s)?)?")
+            "roll\s+(.*)\s+dice(s)?(\s+(?:of|with)\s+(.*)\s+face(s)?)?")
 
-    coin_regex = re.compile("toss\s+(.*)\s+coin(s)?")
+    coin_regex = re.compile("(?:toss|flip)\s+(.*)\s+coin(s)?")
 
     def init(self):
         self.fun_response = ""
@@ -59,14 +59,15 @@ class FunLib(HalLibrary):
             num_of_dice = self.last_matched.group(1)
 
             try:
-                self.num_of_dice = service.parse(num_of_dice)
-               # If faces is also passed
-                self.faces = 1
+                self.num_of_dice = int(service.parse(num_of_dice))
+                # If faces is also passed
+                self.faces = 6
                 try:
                     faces = self.last_matched.group(4)
-                    self.faces = service.parse(faces)
+                    if faces:
+                        self.faces = service.parse(faces)
                 except:
-                    raise
+                    pass
 
                 if self.command_empty(True):
                     if self.num_of_dice < 0 or self.num_of_dice > 10:
@@ -90,7 +91,7 @@ class FunLib(HalLibrary):
             num_of_coins = self.last_matched.group(1)
 
             try:
-                self.num_of_coins = service.parse(num_of_coins)
+                self.num_of_coins = int(service.parse(num_of_coins))
                 if self.command_empty(True):
                     if self.num_of_coins < 0 or self.num_of_coins > 10:
                         self.response["Can't roll that number of coins"]
