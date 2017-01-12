@@ -1,6 +1,6 @@
 numpy==1.11.3
 pytz==2016.10
-quantities==0+unknown
+quantities
 git+git://github.com:virtualanup/semantic.git#egg=semantic
 simpleeval==0.9.1
 six==1.10.0
