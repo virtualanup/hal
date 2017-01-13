@@ -22,7 +22,7 @@ class ConvLib(HalLibrary):
     def init(self):
         pass
 
-    def match(self):
+    def process_input(self):
         if self.match_and_reduce(self.convregex):
             expression = self.last_matched.groups()[-1].strip()
             if expression:
@@ -30,12 +30,13 @@ class ConvLib(HalLibrary):
                     # Try conversion
                     service = ConversionService()
                     self.result = service.convert(expression)
-                    self.matched = True
+                    self.status = self.SUCCESS
                 except:
                     # Fail silently
-                    raise
+                    pass
+
     def get_response(self):
-        return ["Result : " + str(self.result)]
+        self.add_response("Result : " + str(self.result))
 
     @classmethod
     def help(cls):

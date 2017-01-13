@@ -8,12 +8,23 @@ import six
 @six.add_metaclass(abc.ABCMeta)
 class HalLibrary():
 
+    SUCCESS = 1
+    FAILURE = 2
+    ERROR = 3
+    INCOMPLETE = 4
+
     def __init__(self, command):
         self.orig_command = command
         self.command = command
         self.init()
-        self.matched = False
-        self.match()
+
+        # Status is failure by default
+        self.status = self.FAILURE
+        self.response_list = []
+        self.error = ""
+
+        # TODO: Call process_input by default?
+        self.process_input()
 
     def init(self):
         pass
@@ -24,18 +35,30 @@ class HalLibrary():
         return len(self.command) == 0
 
     @abc.abstractmethod
-    def match(self):
+    def process_input(self):
         """
-        returns true if the command is matched
+        Tries to parse the command
         """
         pass
 
     @abc.abstractmethod
-    def get_response(self):
+    def process(self):
         """
-        Gets response for the command
+        Process the parsed command to get the result
         """
         pass
+
+    def add_response(self, response):
+        self.response_list.append(response)
+
+    def get_response(self):
+        return self.response_list
+
+    def get_error(self):
+        return self.error
+
+    def set_error(self, error):
+        self.error = error
 
     def help(cls):
         """

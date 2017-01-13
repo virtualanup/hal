@@ -21,21 +21,21 @@ class CalcLib(HalLibrary):
     def init(self):
         pass
 
-    def match(self):
+    def process_input(self):
         if self.match_and_reduce(self.calcregex):
             expression = self.last_matched.groups()[-1].strip()
             if expression:
                 try:
-                    # Try to parse the expression
+                    # Try to parse the expression here.
                     result = simple_eval(expression)
-                    self.matched = True
+                    self.status  = self.SUCCESS
                     self.result = result
                 except:
                     # Fail silently
                     pass
 
-    def get_response(self):
-        return ["Result : " + str(self.result)]
+    def process(self):
+        self.add_response("Result : " + str(self.result))
 
     @classmethod
     def help(cls):

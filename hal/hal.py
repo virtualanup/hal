@@ -86,13 +86,26 @@ class Hal():
 
             lib_obj = lib(command)
 
-            if lib_obj.matched:
+            # try to match the command with the library
+            lib_obj.process_input()
+
+            if lib_obj.status == HalLibrary.SUCCESS or lib_obj.status == HalLibrary.INCOMPLETE:
 
                 matched = True
+
+                lib_obj.process()
+
                 resp = lib_obj.get_response()
 
                 for r in resp:
                     self.say(r)
+
+            elif lib_obj.status == HalLibrary.ERROR:
+                matched = True
+                self.say("ERROR: " + lib_obj.get_error())
+            else:
+                # Failure to match
+                pass
 
         if not matched:
             self.say("I don't understand what you're saying.")

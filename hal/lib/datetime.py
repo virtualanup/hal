@@ -29,9 +29,9 @@ class DateTime(HalLibrary):
 
     def init(self):
         self.timezones = []
+        self.show = self.SHOWDATE
 
-    def match(self):
-        self.show = 0
+    def process_input(self):
 
         # Trim if it starts with WH question or tell
         self.match_and_reduce_list([self.wh_question, self.tell], True)
@@ -71,7 +71,8 @@ class DateTime(HalLibrary):
 
             if not self.timezones:
                 # TODO: Show city not found error here?
-                print("Timezone not found")
+                self.set_error("Timezone not found")
+                self.status = self.ERROR
                 return
 
         if not pointofref:
@@ -81,7 +82,7 @@ class DateTime(HalLibrary):
         self.match_and_reduce(self.punctuations)
 
         if len(self.command) == 0:
-            self.matched = True
+            self.status = self.SUCCESS
 
     def get_response_timezone(self, cur_timezone=None):
         """
@@ -118,14 +119,12 @@ class DateTime(HalLibrary):
 
         return output + ref_text
 
-    def get_response(self):
-        response = []
+    def process(self):
         if self.timezones:
             for timezone in self.timezones[:10]:
-                response.append(self.get_response_timezone(timezone))
+                self.add_response(self.get_response_timezone(timezone))
         else:
-            response.append(self.get_response_timezone())
-        return response
+            self.add_response(self.get_response_timezone())
 
     @classmethod
     def help(cls):

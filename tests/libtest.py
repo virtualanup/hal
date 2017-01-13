@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+from hal.library import HalLibrary
 
 import unittest
 
@@ -13,4 +14,4 @@ class HalLibTest(unittest.TestCase):
 
     def assert_successful_response(self, command):
         a = self.lib(command)
-        self.assertTrue(a.matched)
+        self.assertEqual(a.status, HalLibrary.SUCCESS)

@@ -20,21 +20,21 @@ class FunLib(HalLibrary):
         "you\'?(re)?\s+(are\s+)?(cool|awesome|amazing|fun(ny)?|rock\s+my\s+world|rule)")
 
     dice_regex = re.compile(
-            "roll\s+(.*)\s+dice(s)?(\s+(?:of|with)\s+(.*)\s+face(s)?)?")
+        "roll\s+(.*)\s+dice(s)?(\s+(?:of|with)\s+(.*)\s+face(s)?)?")
 
     coin_regex = re.compile("(?:toss|flip)\s+(.*)\s+coin(s)?")
 
     def init(self):
         self.fun_response = ""
 
-    def match(self):
+    def process_input(self):
 
         # Meaning of life
         self.match_and_reduce(self.wh_question)
         if self.match_and_reduce(self.mol_regex):
             if self.command_empty(True):
                 self.fun_response = "42."
-                self.matched = True
+                self.status = self.SUCCESS
                 return
         # Rewind and try another fun thing
         self.command = self.orig_command
@@ -42,14 +42,14 @@ class FunLib(HalLibrary):
         if self.match_and_reduce(self.open_pod_regex):
             if self.command_empty(True):
                 self.fun_response = "I'm sorry, Dave. I'm afraid I can't do that."
-                self.matched = True
+                self.status = self.SUCCESS
                 return
 
         self.command = self.orig_command
         if self.match_and_reduce(self.appreciate_regex):
             if self.command_empty(True):
                 self.fun_response = "You betcha."
-                self.matched = True
+                self.status = self.SUCCESS
                 return
 
         self.command = self.orig_command
@@ -71,9 +71,11 @@ class FunLib(HalLibrary):
 
                 if self.command_empty(True):
                     if self.num_of_dice < 0 or self.num_of_dice > 10:
-                        self.response["Can't roll that number of dices"]
+                        self.status = self.ERROR
+                        self.set_error("Can't roll that number of dices")
                     elif self.faces < 1:
-                        self.response = ["Can't roll dice of that faces"]
+                        self.status = self.ERROR
+                        self.set_error("Can't roll dice of that faces")
                     else:
                         self.response = []
                         for j in range(1, self.num_of_dice + 1):
@@ -81,9 +83,10 @@ class FunLib(HalLibrary):
                                 "Dice {} : {}".format(
                                     j, random.randint(1, self.faces))
                             )
-                    self.matched = True
+                        self.status = self.SUCCESS
             except:
                 pass
+
         self.command = self.orig_command
         if self.match_and_reduce(self.coin_regex):
 
@@ -94,19 +97,20 @@ class FunLib(HalLibrary):
                 self.num_of_coins = int(service.parse(num_of_coins))
                 if self.command_empty(True):
                     if self.num_of_coins < 0 or self.num_of_coins > 10:
-                        self.response["Can't roll that number of coins"]
+                        self.status = self.ERROR
+                        self.set_error("Can't roll that number of coins")
                     else:
                         self.response = []
                         for j in range(1, self.num_of_coins + 1):
                             self.response.append(
                                 "Coin {} : {}".format(
                                     j, random.choice(["Head", "Tail"])
-                            ))
-                    self.matched=True
+                                ))
+                    self.status = self.SUCCESS
             except:
                 pass
 
-    def get_response(self):
+    def process(self):
         return self.response
 
     @classmethod
