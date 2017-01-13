@@ -38,3 +38,9 @@ class HalLibTest(unittest.TestCase):
             if string.lower() in s.lower():
                 return
         raise Exception(string," not in ", a.get_response())
+
+    def assert_response_count(self, command, count):
+        a = self.lib(command)
+        a.process_input()
+        a.process()
+        self.assertEqual(count,len(a.get_response()))

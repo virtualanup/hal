@@ -30,7 +30,6 @@ class FunLib(HalLibrary):
         self.fun_response = ""
 
     def process_input(self):
-
         # Meaning of life
         self.match_and_reduce(self.wh_question)
         if self.match_and_reduce(self.mol_regex):
@@ -116,7 +115,7 @@ class FunLib(HalLibrary):
                                 "Coin {} : {}".format(
                                     j, random.choice(["Head", "Tail"])
                                 ))
-                    self.status = self.SUCCESS
+                        self.status = self.SUCCESS
             except:
                 pass
 
