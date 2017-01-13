@@ -35,7 +35,7 @@ class ConvLib(HalLibrary):
                     # Fail silently
                     pass
 
-    def get_response(self):
+    def process(self):
         self.add_response("Result : " + str(self.result))
 
     @classmethod

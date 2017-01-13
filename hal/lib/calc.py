@@ -16,7 +16,7 @@ class CalcLib(HalLibrary):
     keywords = ["calc", "calculate", "eval"]
 
     calcregex = re.compile(
-        "(what(s|\s+is)?|calc|eval|calculate)\s+((the\s+)?value\s+of\s+)?(.*)", re.IGNORECASE)
+        "(what(\'?s|\s+is)?|calc|eval|calculate)\s+((the\s+)?value\s+of\s+)?(.*)", re.IGNORECASE)
 
     def init(self):
         pass
