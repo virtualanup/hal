@@ -20,7 +20,7 @@ class DateTime(HalLibrary):
 
     pointofref_regex = re.compile("\s*((today)|(now))", re.IGNORECASE)
 
-    timezone_regex = re.compile("\s+(in\s+)?(\w+(\/\w+)?)", re.IGNORECASE)
+    timezone_regex = re.compile("\s+(?:in\s+)?((\w+(\/\w+)?\s*)+)", re.IGNORECASE)
 
     SHOWDATE = 1
     SHOWTIME = 2
@@ -58,7 +58,7 @@ class DateTime(HalLibrary):
         if(self.match_and_reduce(self.timezone_regex)):
 
             # Get the city (or continent) name
-            city_info = self.last_matched.group(2).strip().lower()
+            city_info = self.last_matched.group(1).strip().lower().replace(" ", "_")
 
             for tz in country_timezones.items():
                 symbol = tz[0].lower()

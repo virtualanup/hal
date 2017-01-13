@@ -17,12 +17,14 @@ class FunLib(HalLibrary):
     open_pod_regex = re.compile(
         "(please\s+)?open\s+(the\s+)?pod\s+bay\s+door(s)?", re.IGNORECASE)
     appreciate_regex = re.compile(
-        "you\'?(re)?\s+(are\s+)?(cool|awesome|amazing|fun(ny)?|rock\s+my\s+world|rule)")
+        "you\'?(re)?\s+(are\s+)?(cool|awesome|amazing|fun(ny)?|rock\s+my\s+world|rule)", re.IGNORECASE)
 
     dice_regex = re.compile(
-        "roll\s+(.*)\s+dice(s)?(\s+(?:of|with)\s+(.*)\s+face(s)?)?")
+        "roll\s+(.*)\s+dice(s)?(\s+(?:of|with)\s+(.*)\s+face(s)?)?", re.IGNORECASE)
 
-    coin_regex = re.compile("(?:toss|flip)\s+(.*)\s+coin(s)?")
+    coin_regex = re.compile("(?:toss|flip)\s+(.*)\s+coin(s)?", re.IGNORECASE)
+
+    hodor_regex = re.compile("(hodor\s*)+", re.IGNORECASE)
 
     def init(self):
         self.fun_response = ""
@@ -33,7 +35,16 @@ class FunLib(HalLibrary):
         self.match_and_reduce(self.wh_question)
         if self.match_and_reduce(self.mol_regex):
             if self.command_empty(True):
-                self.fun_response = "42."
+                self.add_response("42.")
+                self.status = self.SUCCESS
+                return
+        # Rewind and try another fun thing
+        self.command = self.orig_command
+
+        # Hodor
+        if self.match_and_reduce(self.hodor_regex):
+            if self.command_empty(True):
+                self.add_response("Hodor")
                 self.status = self.SUCCESS
                 return
         # Rewind and try another fun thing
@@ -41,14 +52,14 @@ class FunLib(HalLibrary):
 
         if self.match_and_reduce(self.open_pod_regex):
             if self.command_empty(True):
-                self.fun_response = "I'm sorry, Dave. I'm afraid I can't do that."
+                self.add_response("I'm sorry, Dave. I'm afraid I can't do that.")
                 self.status = self.SUCCESS
                 return
 
         self.command = self.orig_command
         if self.match_and_reduce(self.appreciate_regex):
             if self.command_empty(True):
-                self.fun_response = "You betcha."
+                self.add_response("You Betcha.")
                 self.status = self.SUCCESS
                 return
 
@@ -77,9 +88,8 @@ class FunLib(HalLibrary):
                         self.status = self.ERROR
                         self.set_error("Can't roll dice of that faces")
                     else:
-                        self.response = []
                         for j in range(1, self.num_of_dice + 1):
-                            self.response.append(
+                            self.add_response(
                                 "Dice {} : {}".format(
                                     j, random.randint(1, self.faces))
                             )
@@ -102,7 +112,7 @@ class FunLib(HalLibrary):
                     else:
                         self.response = []
                         for j in range(1, self.num_of_coins + 1):
-                            self.response.append(
+                            self.add_response(
                                 "Coin {} : {}".format(
                                     j, random.choice(["Head", "Tail"])
                                 ))
@@ -111,7 +121,7 @@ class FunLib(HalLibrary):
                 pass
 
     def process(self):
-        return self.response
+        pass
 
     @classmethod
     def help(cls):
