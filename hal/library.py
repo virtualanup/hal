@@ -88,7 +88,7 @@ class HalLibrary():
 
     # Generic matches
     wh_question = re.compile(
-        "((What\s+(is|was))|(whats)|(I\s+want\s+to\s+know)|((Show|Tell)(\s+me)?))(\s+the)?\s+", re.IGNORECASE)
+        "((What\s+(is|was))|(what\'?s)|(I\s+want\s+to\s+know)|((Show|Tell)(\s+me)?))(\s+the)?\s+", re.IGNORECASE)
 
     tell = re.compile("(say|tell)(\s+me)?\s+", re.IGNORECASE)
 

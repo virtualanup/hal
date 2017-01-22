@@ -19,6 +19,7 @@ class CalcTestCase(HalLibTest):
         self.assert_successful_response("eval 12-32")
         self.assert_successful_response("what's the value of 9-12+342")
         self.assert_successful_response("whats the value of 9-12+342")
+        self.assert_successful_response("tell me the value of 2-3")
 
         self.assert_in_response("eval 12-32", "-20")
 
