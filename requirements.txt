@@ -4,3 +4,4 @@ quantities
 git+https://github.com/virtualanup/semantic.git#egg=semantic
 simpleeval==0.9.1
 six==1.10.0
+yahoo-finance==1.4.0
