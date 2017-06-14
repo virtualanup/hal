@@ -23,6 +23,7 @@ class Hal():
                      f.upper().endswith(".PY")
                      ]
 
+        self.all_says = []
         self.libraries = []
         for f in lib_files:
             # Try to load the module
@@ -35,11 +36,14 @@ class Hal():
                             name != "HalLibrary" and not inspect.isabstract(obj):
                         self.libraries.append(obj)
             except:
-                self.say("Error loading library {}".format(f))
+                self.add_say("Error loading library {}".format(f))
                 raise
 
+    def add_say(self, text):
+        self.all_says.append(text)
+
     @abc.abstractmethod
-    def say(self, text):
+    def say_all(self):
         """ Present some information to the user """
         pass
 
@@ -52,15 +56,16 @@ class Hal():
         elif 12 <= hour < 18:
             greeting = 'Good afternoon'
 
-        self.say("{}. Whet can I help you with?".format(greeting))
+        self.add_say("{}. Whet can I help you with?".format(greeting))
 
     def process(self, command):
         """
         Process the command and get response by querying each plugin if required.
         """
+        self.all_says = []
         if(len(command) == 0):
             self.greet()
-            return
+            return self.say_all()
 
         # prepare the command
         command = command.strip()
@@ -98,14 +103,17 @@ class Hal():
                 resp = lib_obj.get_response()
 
                 for r in resp:
-                    self.say(r)
+                    self.add_say(r)
 
             elif lib_obj.status == HalLibrary.ERROR:
                 matched = True
-                self.say("ERROR: " + lib_obj.get_error())
+                self.add_say("ERROR: " + lib_obj.get_error())
             else:
                 # Failure to match
                 pass
 
         if not matched:
-            self.say("I don't understand what you're saying.")
+            self.add_say("I don't understand what you're saying.")
+
+        return self.say_all()
+

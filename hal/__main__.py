@@ -13,8 +13,9 @@ class ConsoleHal(Hal):
     def __init__(self, configpath):
         super(ConsoleHal, self).__init__(configpath)
 
-    def say(self, text):
-        print(text)
+    def say_all(self):
+        response = "\n".join(self.all_says)
+        return response
 
     def display_help(self, help_content):
         print()
@@ -35,4 +36,6 @@ if __name__ == "__main__":
     # Get user command from command line
     command = " ".join(sys.argv[1:])
 
-    hal.process(command)
+    response = hal.process(command)
+    print(response)
+
