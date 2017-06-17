@@ -1,8 +1,8 @@
 numpy==1.11.3
 python-chess==0.18.2
 pytz==2016.10
-quantities==0+unknown
-semantic==1.0.2
+quantities
+git+https://github.com/virtualanup/semantic.git#egg=semantic
 simpleeval==0.9.1
 simplejson==3.10.0
 six==1.10.0

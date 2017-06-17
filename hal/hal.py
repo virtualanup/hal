@@ -56,7 +56,7 @@ class Hal():
         elif 12 <= hour < 18:
             greeting = 'Good afternoon'
 
-        self.add_say("{}. Whet can I help you with?".format(greeting))
+        self.add_say("{}. What can I help you with?".format(greeting))
 
     def process(self, command):
         """
