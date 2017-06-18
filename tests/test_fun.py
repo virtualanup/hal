@@ -30,12 +30,12 @@ class FunTestCase(HalLibTest):
         self.assert_in_response("roll two dices of three faces", "dice 2")
         self.assert_in_response("roll ten dices of one thousand faces", "dice 9")
 
-        self.assert_response_count("roll ten dices of one thousand faces", 10)
+        self.assert_response_count("roll ten dices of one thousand faces", 11)
 
         self.assert_error_response("roll eighteen dices")
 
         self.assert_in_response("flip a coin", "coin 1")
         self.assert_in_response("toss two coins", "coin 2")
         self.assert_in_response("flip two coins", "coin 2")
-        self.assert_response_count("flip ten coins", 10)
+        self.assert_response_count("flip ten coins", 11)
         self.assert_error_response("flip eleven coins", "Can't roll that number of coins")
