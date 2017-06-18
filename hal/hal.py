@@ -17,7 +17,7 @@ class Hal():
     def __init__(self, configpath):
         # Find libraries inside the lib directory
 
-        dir_path = os.path.join(os.path.dirname(__file__), "lib")
+        dir_path = os.path.join(os.path.dirname(__file__), "libraries")
         lib_files = [f for f in os.listdir(dir_path) if
                      os.path.isfile(os.path.join(dir_path, f)) and
                      f.upper().endswith(".PY")
@@ -28,7 +28,7 @@ class Hal():
         for f in lib_files:
             # Try to load the module
             try:
-                module_name = "hal.lib." + f[:-3]
+                module_name = "hal.libraries." + f[:-3]
                 module = importlib.import_module(module_name)
                 for name, obj in inspect.getmembers(module):
                     # Find classes that inherit from HalLibrary
@@ -116,4 +116,3 @@ class Hal():
             self.add_say("I don't understand what you're saying.")
 
         return self.say_all()
-

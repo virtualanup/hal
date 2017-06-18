@@ -4,7 +4,7 @@ import re
 import random
 
 
-from semantic.units import ConversionService
+from semantic3.units import ConversionService
 from hal.library import HalLibrary
 
 

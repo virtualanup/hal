@@ -2,7 +2,7 @@
 
 import re
 import random
-from semantic.numbers import NumberService
+from semantic3.numbers import NumberService
 from hal.library import HalLibrary
 
 

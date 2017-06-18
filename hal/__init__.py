@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .hal import Hal
+from .libraries import *
 
 from .version import __version__, __VERSION__
 
@@ -8,13 +9,14 @@ import sys
 
 __version__ = '0.0.1'
 
-__VERSION__  = __version__
+__VERSION__ = __version__
 
 
 class ConsoleHal(Hal):
     """
     Console interface to hal
     """
+
     def __init__(self, configpath):
         super(ConsoleHal, self).__init__(configpath)
 
@@ -25,7 +27,7 @@ class ConsoleHal(Hal):
     def display_help(self, help_content):
         print()
         print(help_content["name"])
-        print("="*len(help_content["name"]))
+        print("=" * len(help_content["name"]))
         print(help_content["description"])
         print()
         print("Samples:")
@@ -34,6 +36,7 @@ class ConsoleHal(Hal):
             print(s)
         print()
         print()
+
 
 def main():
     # Interpret the given command
