@@ -2,7 +2,7 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-from hal.lib.calc import CalcLib
+from hal.libraries.calc import CalcLib
 from .libtest import HalLibTest
 
 

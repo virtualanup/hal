@@ -2,7 +2,7 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-from hal.lib.fun import FunLib
+from hal.libraries.fun import FunLib
 from .libtest import HalLibTest
 
 

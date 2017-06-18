@@ -2,7 +2,7 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-from hal.lib.datetime import DateTime
+from hal.libraries.datetime import DateTime
 from .libtest import HalLibTest
 
 

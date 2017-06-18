@@ -2,7 +2,7 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-from hal.lib.convert import ConvLib
+from hal.libraries.convert import ConvLib
 from .libtest import HalLibTest
 
 

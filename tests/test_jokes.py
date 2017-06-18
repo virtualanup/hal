@@ -2,7 +2,7 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-from hal.lib.joke import JokeLib
+from hal.libraries.joke import JokeLib
 from .libtest import HalLibTest
 
 
