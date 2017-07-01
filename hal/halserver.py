@@ -1,14 +1,28 @@
 #!/usr/bin/env python
 
-
 import sys, time, socket, threading
-from daemon import Daemon
+from .daemon import Daemon
+from .hal import Hal
 
+
+class DummyHal(Hal):
+    def __init__(self, configpath):
+        super(DummyHal, self).__init__(configpath)
+
+    def say_all(self):
+        pass
+
+    def display_help(self, help_content):
+        pass
 
 class HalDaemon(Daemon):
 
+    def __init__(self, pidfile, configpath):
+        super(HalDaemon, self).__init__(pidfile)
+        self.hal = DummyHal(configpath)
+
     def process_data(self, data):
-        return data * 2
+        return ">" + hal.process(data)
 
     def run(self):
         serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -35,8 +49,8 @@ class HalDaemon(Daemon):
                 client.close()
                 return False
 
-if __name__ == "__main__":
-    daemon = HalDaemon('/tmp/hal-daemon.pid')
+def main():
+    daemon = HalDaemon('/tmp/hal-daemon.pid', '~/')
     if len(sys.argv) == 2:
         if 'start' == sys.argv[1]:
             daemon.start()
@@ -44,13 +58,13 @@ if __name__ == "__main__":
             daemon.stop()
         elif 'restart' == sys.argv[1]:
             daemon.restart()
-        elif 'test' == sys.argv[1]:
-            daemon.test()
         else:
             print("Unknown command")
             sys.exit(2)
         sys.exit(0)
     else:
-        print("usage: %s start|stop|restart" % sys.argv[0])
+        print("usage: halserver start | stop | restart")
         sys.exit(2)
 
+if __name__ == "__main__":
+    sys.exit(main())

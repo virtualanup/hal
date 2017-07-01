@@ -16,6 +16,7 @@ setup(
     entry_points={
         "console_scripts": [
             "hal=hal:main",
+            "halserver=hal.halserver:main",
         ]
     },
     install_requires=[

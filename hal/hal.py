@@ -15,6 +15,7 @@ from .library import HalLibrary
 class Hal():
 
     def __init__(self, configpath):
+        self.configpath = configpath
         # Find libraries inside the lib directory
 
         dir_path = os.path.join(os.path.dirname(__file__), "libraries")

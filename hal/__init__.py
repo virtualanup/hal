@@ -6,6 +6,7 @@ from .libraries import *
 from .version import __version__, __VERSION__
 
 import sys
+import socket
 
 __version__ = '0.0.1'
 
@@ -20,8 +21,24 @@ class ConsoleHal(Hal):
     def __init__(self, configpath):
         super(ConsoleHal, self).__init__(configpath)
 
+    def process(self, command):
+        # First of all, try to query the server. If it fails, then
+        # Run locally
+        try:
+            serversocket = socket.socket()
+            host = 'localhost'
+            port = 3423
+
+            serversocket.connect((host, port))
+            serversocket.send(command.encode())
+            response = serversocket.recv(1024).decode()
+            serversocket.close()
+            return response
+        except:
+            return super(ConsoleHal, self).process(command)
+
     def say_all(self):
-        response = "\n".join(self.all_says)
+        response = "\n".join(self.responses)
         return response
 
     def display_help(self, help_content):
