@@ -22,7 +22,7 @@ class HalDaemon(Daemon):
         self.hal = DummyHal(configpath)
 
     def process_data(self, data):
-        return ">" + hal.process(data)
+        return ">" + self.hal.process(data.decode())
 
     def run(self):
         serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
