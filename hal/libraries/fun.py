@@ -51,7 +51,8 @@ class FunLib(HalLibrary):
 
         if self.match_and_reduce(self.open_pod_regex):
             if self.command_empty(True):
-                self.add_response("I'm sorry, Dave. I'm afraid I can't do that.")
+                self.add_response(
+                    "I'm sorry, Dave. I'm afraid I can't do that.")
                 self.status = self.SUCCESS
                 return
 
@@ -87,6 +88,13 @@ class FunLib(HalLibrary):
                         self.status = self.ERROR
                         self.set_error("Can't roll dice of that faces")
                     else:
+                        self.response = []
+                        self.add_response("Rolling {} dice{} with {} face{}".format(
+                            self.num_of_dice,
+                            "s" if self.num_of_dice > 1 else "",
+                            self.faces,
+                            "s" if self.faces > 1 else "",
+                        ))
                         for j in range(1, self.num_of_dice + 1):
                             self.add_response(
                                 "Dice {} : {}".format(
@@ -110,6 +118,10 @@ class FunLib(HalLibrary):
                         self.set_error("Can't roll that number of coins")
                     else:
                         self.response = []
+                        self.add_response("Flipping {} coin{}".format(
+                            self.num_of_coins,
+                            "s" if self.num_of_coins > 1 else ""
+                        ))
                         for j in range(1, self.num_of_coins + 1):
                             self.add_response(
                                 "Coin {} : {}".format(
