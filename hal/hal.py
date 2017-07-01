@@ -43,10 +43,15 @@ class Hal():
     def add_response(self, text):
         self.responses.append(text)
 
-    @abc.abstractmethod
     def say_all(self):
+        response = "\n".join(self.responses)
+        return response
+
+    @abc.abstractmethod
+    def display_help(self):
         """ Present some information to the user """
         pass
+
 
     def greet(self):
         hour = datetime.datetime.now().hour

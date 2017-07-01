@@ -9,9 +9,6 @@ class DummyHal(Hal):
     def __init__(self, configpath):
         super(DummyHal, self).__init__(configpath)
 
-    def say_all(self):
-        pass
-
     def display_help(self, help_content):
         pass
 
@@ -22,7 +19,7 @@ class HalDaemon(Daemon):
         self.hal = DummyHal(configpath)
 
     def process_data(self, data):
-        return ">" + self.hal.process(data.decode())
+        return ">"+ str(self.hal.process(data))
 
     def run(self):
         serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
