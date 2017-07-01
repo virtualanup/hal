@@ -1,29 +1,14 @@
-from __future__ import absolute_import
+#!/usr/bin/env python
 
 
 import sys, time, socket, threading
-
-from .daemon import Daemon
-from .hal import Hal
-
-
-class ServerHal(Hal):
-    """
-    Server interface to hal
-    """
-    def __init__(self, configpath):
-        super(ServerHal, self).__init__(configpath)
-
-    def say_all(self):
-        response = "\n".join(self.all_says)
-        return response
+from daemon import Daemon
 
 
 class HalDaemon(Daemon):
 
-    def __init__(self, pidfile):
-        super(HalDaemon, self).__init__(pidfile)
-        self.hal = ServerHal()
+    def process_data(self, data):
+        return data * 2
 
     def run(self):
         serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -42,7 +27,7 @@ class HalDaemon(Daemon):
                 data = client.recv(size).decode()
                 if data:
                     # Set the response to echo back the recieved data
-                    response = self.hal.process(data)
+                    response = self.process_data(data)
                     client.send(response.encode())
                 else:
                     raise error('Client disconnected')
@@ -50,9 +35,8 @@ class HalDaemon(Daemon):
                 client.close()
                 return False
 
-
-def main():
-    daemon = HalDaemon('/tmp/daemon-example.pid')
+if __name__ == "__main__":
+    daemon = HalDaemon('/tmp/hal-daemon.pid')
     if len(sys.argv) == 2:
         if 'start' == sys.argv[1]:
             daemon.start()
@@ -64,11 +48,9 @@ def main():
             daemon.test()
         else:
             print("Unknown command")
-            return 2
-        return 0
+            sys.exit(2)
+        sys.exit(0)
     else:
         print("usage: %s start|stop|restart" % sys.argv[0])
-        return 2
+        sys.exit(2)
 
-if __name__ == "__main__":
-    sys.exit(main())
