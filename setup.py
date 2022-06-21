@@ -20,7 +20,7 @@ setup(
         ]
     },
     install_requires=[
-        'numpy==1.11.3',
+        'numpy==1.22.0',
         'python-chess==0.18.2',
         'pytz==2016.10',
         'quantities',
