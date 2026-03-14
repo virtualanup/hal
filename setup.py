@@ -24,7 +24,7 @@ setup(
         'python-chess==0.18.2',
         'pytz==2016.10',
         'quantities',
-        'simpleeval==0.9.1',
+        'simpleeval==1.0.5',
         'simplejson==3.10.0',
         'six==1.10.0',
         'yahoo-finance==1.4.0',
